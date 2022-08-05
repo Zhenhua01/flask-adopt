@@ -5,15 +5,20 @@
 {% block content %}
 
 <h1>Pets</h1>
+
+{% for msg in get_flashed_messages() %}
+  {{ msg }}
+{% endfor %}
+
 <ul>
   {% for pet in pets %}
-  <li><a href="/pets/{{ pet.id }}">{{ pet.name }}</a>
-  {% if pet.photo_url %}
-  <img src="{{ pet.photo_url }}" alt="photo of {{ pet.name }}">
-  {% endif %}
-  {% if pet.available %}
-  AVAILABLE
-  {% endif %}
+  <li><a href="/{{ pet.id }}">{{ pet.name }}</a>
+    {% if pet.photo_url %}
+      <img src="{{ pet.photo_url }}" alt="photo of {{ pet.name }}">
+    {% endif %}
+    {% if pet.available %}
+      AVAILABLE
+    {% endif %}
   </li>
   {% endfor %}
 </ul>

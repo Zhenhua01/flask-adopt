@@ -1,11 +1,28 @@
 {% extends 'base.html' %}
 
-{% block title %}Add Pet Form{% endblock %}
+{% block title %}Display Pet{% endblock %}
 
 {% block content %}
 
-<h1>Add Pet Form</h1>
+<h1>Pet Information</h1>
 
+{% for msg in get_flashed_messages() %}
+  {{ msg }}
+{% endfor %}
+
+
+    <p> Pet Name: {{ pet.name }} </p>
+
+    {% if pet.photo_url %}
+      <img src="{{ pet.photo_url }}" alt="photo of {{ pet.name }}">
+    {% endif %}
+
+    <p> Age: {{ pet.age }} </p>
+
+    <p> Species: {{ pet.species }} </p>
+
+
+<h1>Edit Pet Information</h1>
 
 <form method="POST">
 
