@@ -9,8 +9,8 @@
 {% for msg in get_flashed_messages() %}
   {{ msg }}
 {% endfor %}
-
-<ul>
+<div class="container">
+<ul class="">
   {% for pet in pets %}
   <li><a href="/{{ pet.id }}">{{ pet.name }}</a>
     {% if pet.photo_url %}
@@ -22,6 +22,6 @@
   </li>
   {% endfor %}
 </ul>
-<a href="/add"><button>Add Pet</button></a>
-
+<a href="/add"><button class="btn btn-primary">Add Pet</button></a>
+</div>
 {% endblock %}

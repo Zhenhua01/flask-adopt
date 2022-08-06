@@ -1,11 +1,16 @@
 """Flask app for adopt app."""
 
+
 from flask import Flask, render_template, redirect, flash
 
 from flask_debugtoolbar import DebugToolbarExtension
 
 from models import db, connect_db, Pet
 from forms import AddPetForm, EditPetForm
+from petfinder import update_auth_token_string
+
+
+
 
 app = Flask(__name__)
 
@@ -24,6 +29,11 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 
 toolbar = DebugToolbarExtension(app)
 
+@app.before_first_request
+def refresh_credentials():
+    """Just once, get token and store it globally."""
+    global auth_token
+    auth_token = update_auth_token_string()
 
 @app.get('/')
 def load_home_page():
@@ -46,7 +56,11 @@ def show_add_pet_form():
         age = form.age.data
         notes = form.notes.data
 
-        pet = Pet(name=name, species=species, photo_url=photo_url, age=age, notes=notes)
+        pet = Pet(name=name,
+                  species=species,
+                  photo_url=photo_url,
+                  age=age,
+                  notes=notes)
 
         db.session.add(pet)
         db.session.commit()
@@ -59,7 +73,8 @@ def show_add_pet_form():
 
 @app.route('/<int:id>', methods = ["GET", "POST"])
 def show_edit_pet_form(id):
-    """Shows pet information, accepts changes, and updates database"""
+    """Shows pet information and edit form, accepts changes, and updates
+    database"""
 
     pet = Pet.query.get_or_404(id)
     form = EditPetForm(obj=pet)
@@ -71,7 +86,7 @@ def show_edit_pet_form(id):
 
         db.session.commit()
         flash(f"Pet {pet.name} was updated!")
-        return redirect(f"/{id}")
+        return redirect("/")
 
     else:
         return render_template("petinfo.html", form=form, pet=pet)
